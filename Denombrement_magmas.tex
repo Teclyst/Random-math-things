@@ -1,0 +1,191 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\newtheorem*{theoreme}{Théorème}
+\newtheorem*{lemme}{Lemme}
+\newtheorem*{proposition}{Proposition}
+\newtheorem{corollaire}{Corollaire}
+\newtheorem*{remarque}{Remarque}
+\theoremstyle{definition}
+\newtheorem*{definition}{Définition}
+\theoremstyle{remark}
+\newtheorem*{demonstration}{Démonstration}
+\usepackage[T1]{fontenc}
+\setlength{\parindent}{0pt}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage[lowercase]{theoremref}
+\DeclareMathAlphabet{\mathbbb}{U}{bbold}{m}{n}
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+
+\title{Sur le nombre de magmas de cardinal $n$}
+\author{Matteo Wei}
+\date{Juillet 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{La formule de Cauchy-Frobenius-Burnside}
+
+\begin{definition}
+    Soit $G$ un groupe de neutre $e$ et $X$ un ensemble. Une \textit{action de $G$ sur $X$} est une application $(g,x)\in G\times X \mapsto g.x\in X$ telle que :
+    \begin{itemize}
+        \item $\forall x\in X, e.x=x$.
+        \item $\forall (g,h,x)\in G\times G\times X, g.(h.x)=(gh).x$.
+    \end{itemize}
+\end{definition}
+
+On fixe pour la suite de cette partie $G$ un groupe fini, $X$ un ensemble fini, et $(g,x)\in G\times X \mapsto g.x\in X$ une action de $G$ sur $X$.
+
+\begin{definition}
+    On note :
+    \begin{itemize}
+        \item Pour $x\in X$, $\omega_G(x)=\{g.x\mid g\in G\}$ l'\textit{orbite} de $x$ sous l'action de $G$. Les orbites sous l'action de $G$ forment une partition de $X$.
+        \item Pour $x\in X$, $G_x=\{g\in G\mid g.x=x\}$ le \textit{stabilisateur} de $x$ sous l'action de $G$. C'est un sous-groupe de $G$.
+        \item Pour $g\in G$, $\mathrm{Fix}_X(g)=\{x\in X\mid g.x=x\}$ l'\textit{ensemble des points fixés} par $g$.
+        \item $N(G,X)=|\{\omega_G(x)\mid x\in X\}|$ le nombre d'orbites de $X$ sous l'action de $G$.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+    On dit que l'action de $G$ sur $X$ est \textit{libre} si tous les stabilisateurs sont triviaux.
+\end{definition}
+
+\begin{lemme}
+    \thlabel{orb-stab}
+    Soit $x\in X$. On a :
+    $$|G|=|\omega_G(x)||G_x|.$$
+\end{lemme}
+
+\begin{demonstration}
+    Si $(g,h)\in G^2$, on a $g.x=h.x\Leftrightarrow h^{-1}g.x=x\Leftrightarrow h^{-1}g\in G_x\Leftrightarrow g\in hG_x$, et par liberté de l'action de Cayley, $|hG_x|=|G_x|$. On en déduit facilement le résultat voulu.
+\end{demonstration}
+
+\begin{theoreme}[formule de Cauchy-Frobenius-Burnside]
+    \thlabel{CFB}
+    On a :
+    $$N(G,X)=\frac{1}{|G|}\sum_{g\in G}|\mathrm{Fix}_X(g)|.$$
+\end{theoreme}
+
+\begin{demonstration}
+    Soit $x\in X$. On remarque qu'on a :
+    $$\sum_{y\in\omega_G(x)}\frac{1}{|\omega_G(x)|}.$$
+    On en déduit que
+    $$N(G,X)=\sum_{x\in X}\frac{1}{|\omega_G(x)|}.$$
+    Il vient alors, d'après le \thref{orb-stab},
+    \begin{align*}
+        N(G,X)&=\sum_{x\in X}\frac{|G_x|}{|G|}\\
+        &=\frac1{|G|}\sum_{x\in X}\sum_{g\in G}\mathbbb{1}_{g.x=x}\\
+        &=\frac1{|G|}\sum_{g\in G}\sum_{x\in X}\mathbbb{1}_{g.x=x}\\
+        &=\frac{1}{|G|}\sum_{g\in G}|\mathrm{Fix}_X(g)|
+    \end{align*}
+    ce qui conclut.
+\end{demonstration}
+
+\section{Dénombrement des magmas}
+
+On fixe pour toute la suite $n\in\mathbb N$.
+
+\begin{definition}
+    Soit $\sigma\in\mathfrak S_n$. On note, pour $k\in[\![1,n]\!]$, $\mu(\sigma)_k$ le nombre de ses cycles de longueur $k$.
+\end{definition}
+
+\begin{proposition}
+Il y a
+$$\frac{1}{n!}\sum_{\sigma\in\mathfrak S_n}\prod_{1\leq k,l\leq n}\left(\sum_{d\mid k\lor l}d\mu(\sigma)_d\right)^{\mu(\sigma)_k\mu(\sigma)_lk\land l}$$
+magmas de cardinal $n$ à isomorphisme près.
+\end{proposition}
+
+\begin{demonstration}
+    On se ramène bien entendu sur l'ensemble $E=[\![1,n]\!]$ ; si $*$ et $\star$ sont deux lois de compositions internes sur $E$, on a par définition
+    $$(E,*)\cong(E,\star)\Leftrightarrow\exists\sigma\in\mathfrak S_n:\forall (x,y)\in E^2,x*y=\sigma(\sigma^{-1}(x)\star\sigma^{-1}(y)).$$
+    On pose donc naturellement, pour $\sigma\in\mathfrak S_n$ et $\star\in E^{E^2}$,
+    $$\sigma.\star:(x,y)\in E^2\mapsto\sigma(\sigma^{-1}(x)\star\sigma^{-1}(y))\in E.$$
+    On vérifie que $(\sigma,\star)\in \mathfrak S_n\times E^{E^2}\mapsto \sigma.\star\in E^{E^2}$ définit bien une action de $\mathfrak S_n$ sur $E^{E^2}$ ; ce qu'on vient de voir montre que deux lois définissent des magmas isomorphes si, et seulement si, elles sont dans la même orbite pour cette action. Ainsi, on cherche à déterminer $N\left(\mathfrak S_n,E^{E^2}\right)$, or la formule de Cauchy-Frobenius-Burnside nous dit que :
+    $$N\left(\mathfrak S_n,E^{E^2}\right)=\frac{1}{n!}\sum_{\sigma\in \mathfrak S_n}\left|\mathrm{Fix}_{E^{E^2}}(\sigma)\right|.$$
+    On est donc ramené au calcul des cardinaux des ensembles des lois fixées par l'action de $\mathcal S_n$.
+
+    Soit $\sigma\in\mathfrak S_n$. Considérons une loi $\star$ fixée par $\sigma$. Cette condition se réécrit
+    $$\forall(x,y)\in E^2, \sigma(x)\star\sigma(y)=\sigma(x\star y).$$
+    On en déduit que :
+    $$\forall k\in\mathbb N,\sigma^k(x)\star\sigma^k(y)=\sigma^k(x\star y).$$
+    On est donc conduit à considérer les actions naturelles de $\langle\sigma\rangle$ sur $E^2$ et $E$. On fait deux observations :
+    \begin{itemize}
+        \item Choisir $x\star y$ détermine intégralement les valeurs de $\star$ sur $\omega_{\langle\sigma\rangle}(x,y)$.
+        \item Pour que les choses bouclent correctement, il faut qu'on ait $|\omega_{\langle\sigma\rangle}(x\star y)|\mid|\omega_{\langle\sigma\rangle}(x,y)|$.
+    \end{itemize}
+    
+    Et on remarque facilement que ces conditions suffise, c'est-à dire qu'en choisissant un élément vérifiant l'hypothèse de division des cardinaux pour chaque orbite pour l'action sur $E^2$, et en complétant correctement, on crée une loi fixée par $\sigma$.
+
+    Soit $(k,l)\in[\![1,n]\!]^2$. Il y a par définition $\mu(\sigma)_k$ orbites de cardinal $k$ pour l'action sur $E$, et $\mu(\sigma)_l$ de cardinal $l$. Il y a donc $\mu(\sigma)_k\mu(\sigma)_lkl$ couples de la forme $(x,y)$, avec $|\omega_{\langle\sigma\rangle}(x)|=k$ et $|\omega_{\langle\sigma\rangle}(y)|=l$ ; ces couples se répartissent sur des orbites de cardinal $k\lor l$ pour l'action sur $E^2$, et il y a donc $\mu(\sigma)_k\mu(\sigma)_lk\land l$ telles orbites.
+
+    Par ailleurs, d'après la deuxième condition proposée plus haut, on a pour chacune de ces orbites exactement
+    $$\sum_{d\mid k\lor l}d\mu(\sigma)_d$$
+    choix possibles d'un élément.
+
+    On déduit de tout cela
+    $$\left|\mathrm{Fix}_{E^{E^2}}(\sigma)\right|=\prod_{1\leq k,l\leq n}\left(\sum_{d\mid k\lor l}d\mu(\sigma)_d\right)^{\mu(\sigma)_k\mu(\sigma)_lk\land l}$$
+    puis la formule voulue.
+\end{demonstration}
+
+On peut en déduire une formule dépendant uniquement des $n$-uplets de la forme des $\mu(\sigma)$, $\sigma\in\mathfrak S_n$ :
+
+\begin{corollaire}
+    \thlabel{cor1}
+    Il y a
+    $$\sum_{\substack{\mu\in \mathbb N^n\\\sum\limits_{k=1}^nk\mu_k=n}}\frac{\displaystyle\prod_{1\leq k,l\leq n}\left(\sum_{d\mid k\lor l}d\mu_d\right)^{\mu_k\mu_lk\land l}}{\displaystyle\prod_{k=1}^nk^{\mu_k}\mu_k!}$$
+    magmas de cardinal $n$ à isomorphisme près.
+\end{corollaire}
+
+\begin{demonstration}
+    Il s'agit de la formule précédente, combinée au dénombrement des permutations admettant un type cyclique donné.
+    Pour construire une permutation admettant, pour $k\in[\![1,n]\!]$, $\mu_k$ $k$-cycles :
+    
+    \begin{itemize}
+        \item On choisit quels éléments mettre dans chaque cycle, ce qui revient à un calcul d'anagrammes : il y a
+        $\dfrac{n!}{\displaystyle\prod_{k=1}^nk!^{\mu_k}}$
+        possibilités.
+        \item On construit chacun des cycles à partir des éléments dedans : il y a $(k-1)!$ possibilités pour un cycle de longueur $k$, et donc $\displaystyle\prod_{k=1}^{n}(k-1)!^{\mu_k}$ possibilités au total.
+        \item On constate qu'on construit une permutation donnée autant de fois qu'on peut permuter les cycles de même longueur entre eux, il faut donc diviser par $\displaystyle\prod_{k=1}^n\mu_k!$.
+    \end{itemize}
+
+    Cela donne, au total,
+    $$\frac{n!}{\displaystyle\prod_{k=1}^nk^{\mu_k}\mu_k!}$$
+    telles permutations, ce qui est bien le résultat voulu.
+\end{demonstration}
+
+On en déduit aussi des expressions dépendant des types cycliques.
+
+\begin{definition}
+    Soit $\sigma\in\mathfrak S_n$. On note $\lambda(\sigma)=(\lambda(\sigma)_k)_{k=0}^{r(\sigma)}$ son type cyclique.
+\end{definition}
+
+\begin{corollaire}
+    \thlabel{cor2}
+    Il y a
+    $$\frac{1}{n!}\sum_{\sigma\in\mathfrak S_n}\prod_{1\leq k,l\leq r(\sigma)}\left(\sum_{\substack{1\leq d\leq r(\sigma)\\\lambda(\sigma)_d\mid \lambda(\sigma)_k\lor \lambda(\sigma)_l}}\lambda(\sigma)_d\right)^{\lambda(\sigma)_k\land \lambda(\sigma)_l}$$
+magmas de cardinal $n$ à isomorphisme près.
+\end{corollaire}
+
+\begin{demonstration}
+    Soit $\sigma\in\mathfrak S_n$. Remarquons que, si $(k,l)\in [\![1,n]\!]^2$, on a :
+    $$\sum_{\substack{1\leq d\leq r(\sigma)\\\lambda(\sigma)_d\mid k\lor l}}\lambda(\sigma)_d=\sum_{d\mid k\lor l}d\mu(\sigma)_d.$$
+    En effet, ces deux quantités sont le nombre d'éléments dans des cycles de longueurs divisant $k\lor l$.
+    Par ailleurs, comme il y a $\mu(\sigma)_k$ cycles de longueur $k$, et $\mu(\sigma)_l$ de longueur $l$,
+    $$\left(\sum_{\substack{1\leq d\leq r(\sigma)\\\lambda(\sigma)_d\mid k\lor l}}\lambda(\sigma)_d\right)^{k\land l}$$
+    apparaît $\mu(\sigma)_k\mu(\sigma)_l$ fois dans le produit du \thref{cor2}, ce qui donne bien le résultat voulu.
+\end{demonstration}
+
+L'expression correspondante à celle du \thref{cor1}, en fonction des partitions de $n$, est moins intéressante car elle nécessite quand même de compter les cycles d'une longueur donnée.
+
+\end{document}
